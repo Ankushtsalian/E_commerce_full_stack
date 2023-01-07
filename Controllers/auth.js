@@ -10,8 +10,16 @@ const register = async (req, res) => {
     throw new CustomError.BadRequestError("Email Already Exists");
 
   const user = await User.create(req.body);
+
   const token = await user.createJWT();
-  console.log({ token });
+
+  const oneDay = 1000 * 60 * 60 * 24;
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + oneDay),
+  });
+
   res.status(StatusCodes.CREATED).json({ user, token });
 };
 

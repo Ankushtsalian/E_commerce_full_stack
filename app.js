@@ -24,7 +24,7 @@ app.use(express.json());
 app.get("/", (req, res) => res.send("hello world"));
 
 //AUTH Router
-app.use("/api/v1", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-
+const JWT = require("jsonwebtoken");
+const { options } = require("joi");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -40,6 +41,21 @@ userSchema.pre("save", async function () {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
+};
+
+userSchema.methods.createJWT = async function () {
+  const tokenUserPayload = {
+    name: this.name,
+    userId: this._id,
+    role: this.role,
+  };
+  const token = JWT.sign(tokenUserPayload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
+  return token;
+};
+userSchema.methods.verifyJWT = async function (payload) {
+  const token = JWT.verify(payload, process.env.JWT_SECRET);
 };
 
 module.exports = mongoose.model("User", userSchema);

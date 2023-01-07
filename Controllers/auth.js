@@ -10,11 +10,14 @@ const register = async (req, res) => {
     throw new CustomError.BadRequestError("Email Already Exists");
 
   const user = await User.create(req.body);
-
-  res.status(StatusCodes.CREATED).json({ user });
+  const token = await user.createJWT();
+  console.log({ token });
+  res.status(StatusCodes.CREATED).json({ user, token });
 };
 
 const login = (req, res) => {
+  const { email, password } = req.body;
+
   res.send("login");
 };
 

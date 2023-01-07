@@ -13,6 +13,7 @@ const morgan = require("morgan");
 const connectDB = require("./db/connect");
 const port = process.env.PORT || 5000;
 
+const authRouter = require("./Routes/auth");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorMiddleware = require("./middleware/not-found");
 
@@ -20,7 +21,10 @@ const errorMiddleware = require("./middleware/not-found");
 app.use(morgan("tiny"));
 app.use(express.json());
 
-app.get("/api/v1", (req, res) => res.send("hello world"));
+app.get("/", (req, res) => res.send("hello world"));
+
+//AUTH Router
+app.use("/api/v1", authRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

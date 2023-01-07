@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Provide email"],
     validate: {
-      validator: validator.email,
+      validator: validator.isEmail,
       message: "Please provide valid email",
     },
   },
@@ -29,4 +29,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.Model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);

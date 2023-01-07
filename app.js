@@ -6,6 +6,9 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 
+//rest of the packages
+const morgan = require("morgan");
+
 // Database
 const connectDB = require("./db/connect");
 const port = process.env.PORT || 5000;
@@ -14,6 +17,7 @@ const notFoundMiddleware = require("./middleware/not-found");
 const errorMiddleware = require("./middleware/not-found");
 
 // Middleware
+app.use(morgan("tiny"));
 app.use(express.json());
 
 app.get("/api/v1", (req, res) => res.send("hello world"));

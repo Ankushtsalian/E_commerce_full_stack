@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const JWT = require("jsonwebtoken");
-const { options } = require("joi");
+const { createJWToken, verifyJWToken } = require("../utils/index");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -49,13 +49,15 @@ userSchema.methods.createJWT = async function () {
     userId: this._id,
     role: this.role,
   };
-  const token = JWT.sign(tokenUserPayload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+
+  const token = createJWToken({ tokenUserPayload });
+
   return token;
 };
-userSchema.methods.verifyJWT = async function (payload) {
-  const token = JWT.verify(payload, process.env.JWT_SECRET);
+userSchema.methods.verifyJWT = async function (tokenPayload) {
+  const token = verifyJWToken({ tokenPayload });
+  return token;
+  //   JWT.verify(payload, process.env.JWT_SECRET);
 };
 
 module.exports = mongoose.model("User", userSchema);

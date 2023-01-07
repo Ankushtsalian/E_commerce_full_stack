@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 
 const authRouter = require("./Routes/auth");
 const notFoundMiddleware = require("./middleware/not-found");
-const errorMiddleware = require("./middleware/not-found");
+const errorMiddleware = require("./middleware/error-handler");
 
 // Middleware
 app.use(morgan("tiny"));

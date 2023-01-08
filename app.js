@@ -6,7 +6,6 @@ const cors = require("cors");
 // Express
 const express = require("express");
 const app = express();
-// app.use(cors());
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -29,10 +28,13 @@ const errorMiddleware = require("./middleware/error-handler");
 // Middleware
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 app.get("/api/v1", (req, res) => {
-  console.log({ cookieParser: req.cookies });
+  console.log({ cookie: req.signedCookies });
   res.send("hello world");
 });
 

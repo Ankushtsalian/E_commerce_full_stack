@@ -1,3 +1,7 @@
-const { createJWToken, verifyJWToken } = require("./JWT");
+const {
+  createJWToken,
+  verifyJWToken,
+  attachCookiesToResponse,
+} = require("./JWT");
 
-module.exports = { createJWToken, verifyJWToken };
+module.exports = { createJWToken, verifyJWToken, attachCookiesToResponse };

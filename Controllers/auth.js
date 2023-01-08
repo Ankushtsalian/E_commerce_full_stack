@@ -1,6 +1,7 @@
 const User = require("../Modals/User-Schema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
+const { attachCookiesToResponse } = require("../utils");
 
 const register = async (req, res) => {
   const { name, email } = req.body;
@@ -10,17 +11,13 @@ const register = async (req, res) => {
     throw new CustomError.BadRequestError("Email Already Exists");
 
   const user = await User.create(req.body);
+  const tokenPayload = {
+    name: user.name,
+    userId: user._id,
+    role: user.role,
+  };
 
-  const token = await user.createJWT();
-
-  const oneDay = 1000 * 60 * 60 * 24;
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    expires: new Date(Date.now() + oneDay),
-  });
-
-  res.status(StatusCodes.CREATED).json({ user, token });
+  attachCookiesToResponse({ res, tokenPayload });
 };
 
 const login = (req, res) => {

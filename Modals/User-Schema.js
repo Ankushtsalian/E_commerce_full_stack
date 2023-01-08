@@ -56,7 +56,6 @@ userSchema.methods.createJWT = async function () {
 userSchema.methods.verifyJWT = async function (tokenPayload) {
   const token = verifyJWToken({ tokenPayload });
   return token;
-  //   JWT.verify(payload, process.env.JWT_SECRET);
 };
 
 module.exports = mongoose.model("User", userSchema);

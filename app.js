@@ -22,6 +22,7 @@ const connectDB = require("./db/connect");
 const port = process.env.PORT || 5000;
 
 const authRouter = require("./Routes/auth");
+const userRouter = require("./Routes/user");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorMiddleware = require("./middleware/error-handler");
 // Middleware
@@ -38,6 +39,7 @@ app.get("/api/v1", (req, res) => {
 
 //AUTH Router
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

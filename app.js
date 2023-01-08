@@ -2,12 +2,15 @@ require("./db/connect");
 require("dotenv").config();
 require("express-async-errors");
 const cors = require("cors");
+
 // Express
 const express = require("express");
 const app = express();
 app.use(cors());
+
 //rest of the packages
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 // Database
 const connectDB = require("./db/connect");
@@ -20,8 +23,12 @@ const errorMiddleware = require("./middleware/error-handler");
 // Middleware
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use(cookieParser());
 
-app.get("/", (req, res) => res.send("hello world"));
+app.get("/api/v1", (req, res) => {
+  console.log({ cookieParser: req.cookies });
+  res.send("hello world");
+});
 
 //AUTH Router
 app.use("/api/v1/auth", authRouter);

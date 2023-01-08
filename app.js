@@ -6,7 +6,13 @@ const cors = require("cors");
 // Express
 const express = require("express");
 const app = express();
-app.use(cors());
+// app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 //rest of the packages
 const morgan = require("morgan");

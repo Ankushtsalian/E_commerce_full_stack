@@ -42,17 +42,17 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return isMatch;
 };
 
-userSchema.methods.createJWT = async function () {
-  const tokenUserPayload = {
-    name: this.name,
-    userId: this._id,
-    role: this.role,
-  };
+// userSchema.methods.createJWT = async function () {
+//   const tokenUserPayload = {
+//     name: this.name,
+//     userId: this._id,
+//     role: this.role,
+//   };
 
-  const token = createJWToken({ tokenUserPayload });
+//   const token = createJWToken({ tokenUserPayload });
 
-  return token;
-};
+//   return token;
+// };
 userSchema.methods.verifyJWT = async function (tokenPayload) {
   const token = verifyJWToken({ tokenPayload });
   return token;

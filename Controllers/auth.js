@@ -16,7 +16,6 @@ const register = async (req, res) => {
     userId: user._id,
     role: user.role,
   };
-
   attachCookiesToResponse({ res, tokenPayload });
 };
 
@@ -29,5 +28,9 @@ const login = (req, res) => {
 const logout = (req, res) => {
   res.send("logout");
 };
+const deleteAllUser = async (req, res) => {
+  const user = await User.deleteMany();
+  res.send("deleted");
+};
 
-module.exports = { register, login, logout };
+module.exports = { register, login, logout, deleteAllUser };

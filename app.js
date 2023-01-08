@@ -34,8 +34,7 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 app.get("/api/v1", (req, res) => {
-  console.log({ cookie: req.signedCookies });
-  res.send("hello world");
+  res.status("200").json({ cookie: req.signedCookies });
 });
 
 //AUTH Router

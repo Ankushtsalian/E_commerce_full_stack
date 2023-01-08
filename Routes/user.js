@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const {
+  authenticateUser,
+  authorizePermissions,
+} = require("../middleware/authentication");
+const {
   getAllUsers,
   getSingleUser,
   showCurrentUser,
   updateUserPassword,
   updateUser,
 } = require("../Controllers/user");
-const { authenticateUser } = require("../middleware/authentication");
 
-router.route("/").get(authenticateUser, getAllUsers);
+router.route("/").get(authenticateUser, authorizePermissions, getAllUsers);
 router.route("/updateUser").post(updateUser);
 router.route("/updateUserPassword").patch(updateUserPassword);
 router.route("/showMe").get(showCurrentUser);

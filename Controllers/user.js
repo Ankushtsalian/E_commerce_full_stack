@@ -13,7 +13,7 @@ const getSingleUser = async (req, res) => {
     "-password"
   );
 
-  if (!users)
+  if (!user)
     throw new CustomError.NotFoundError(
       `No User with id : ${req.params.userId}`
     );

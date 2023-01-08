@@ -19,10 +19,31 @@ const register = async (req, res) => {
   attachCookiesToResponse({ res, tokenPayload });
 };
 
-const login = (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body;
 
-  res.send("login");
+  if (!email || !password)
+    throw new CustomError.BadRequestError("Please Provide Email and Password");
+
+  const emailAlreadyExists = await User.findOne({
+    email,
+  });
+
+  if (!emailAlreadyExists)
+    throw new CustomError.UnauthenticatedError("User doesn't Exists");
+
+  const isPasswordValid = await emailAlreadyExists.comparePassword(password);
+
+  if (!isPasswordValid)
+    throw new CustomError.UnauthenticatedError("User doesn't Exists");
+
+  const tokenPayload = {
+    name: emailAlreadyExists.name,
+    userId: emailAlreadyExists._id,
+    role: emailAlreadyExists.role,
+  };
+
+  attachCookiesToResponse({ res, tokenPayload });
 };
 
 const logout = (req, res) => {

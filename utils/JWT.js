@@ -26,6 +26,6 @@ const attachCookiesToResponse = ({ res, tokenPayload }) => {
     signed: true,
   });
 
-  res.status(StatusCodes.CREATED).json({ tokenPayload, token });
+  res.status(StatusCodes.CREATED).json({ token });
 };
 module.exports = { createJWToken, verifyJWToken, attachCookiesToResponse };

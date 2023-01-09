@@ -1,11 +1,15 @@
 const User = require("../Modals/User-Schema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-
+const { createTokenUser, attachCookiesToResponse } = require("../utils");
+/**-----------------------------------------------getAllUsers------------------------------------------------ */
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: "user" }).select("-password");
   res.status(StatusCodes.OK).json({ users });
 };
+/**----------------------------------------------------------------------------------------------- */
+
+/**-----------------------------------------------getSingleUser----------------------------------------------- */
 
 const getSingleUser = async (req, res) => {
   const user = await User.findOne({ _id: req.params.userId }).select(
@@ -19,10 +23,15 @@ const getSingleUser = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ user });
 };
+/**----------------------------------------------------------------------------------------------- */
+
+/**-------------------------------------------------showCurrentUser---------------------------------------------- */
 
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
+
+/**--------------------------------------------------updateUserPassword--------------------------------------------- */
 
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -44,10 +53,28 @@ const updateUserPassword = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ user, msg: "Success! Password Updated" });
 };
+/**----------------------------------------------------------------------------------------------- */
+
+/**------------------------------------------------updateUser----------------------------------------------- */
 
 const updateUser = async (req, res) => {
-  res.send(req.body);
+  const { email, name } = req.body;
+
+  if (!email || !name)
+    throw new CustomError.BadRequestError("Please Provide all values");
+
+  const user = await User.findOneAndUpdate(
+    { _id: req.user.userId },
+    { email, name },
+    { new: true, runValidators: true }
+  );
+
+  const tokenPayload = createTokenUser(user);
+
+  attachCookiesToResponse({ res, tokenPayload });
 };
+
+/**----------------------------------------------------------------------------------------------- */
 
 module.exports = {
   getAllUsers,

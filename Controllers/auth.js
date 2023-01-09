@@ -1,7 +1,7 @@
 const User = require("../Modals/User-Schema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { attachCookiesToResponse } = require("../utils");
+const { attachCookiesToResponse, createTokenUser } = require("../utils");
 
 const register = async (req, res) => {
   const { name, email } = req.body;
@@ -11,11 +11,9 @@ const register = async (req, res) => {
     throw new CustomError.BadRequestError("Email Already Exists");
 
   const user = await User.create(req.body);
-  const tokenPayload = {
-    name: user.name,
-    userId: user._id,
-    role: user.role,
-  };
+
+  const tokenPayload = createTokenUser(user);
+
   attachCookiesToResponse({ res, tokenPayload });
 };
 
@@ -25,23 +23,18 @@ const login = async (req, res) => {
   if (!email || !password)
     throw new CustomError.BadRequestError("Please Provide Email and Password");
 
-  const emailAlreadyExists = await User.findOne({
+  const user = await User.findOne({
     email,
   });
 
-  if (!emailAlreadyExists)
-    throw new CustomError.UnauthenticatedError("User doesn't Exists");
+  if (!user) throw new CustomError.UnauthenticatedError("User doesn't Exists");
 
-  const isPasswordValid = await emailAlreadyExists.comparePassword(password);
+  const isPasswordValid = await user.comparePassword(password);
 
   if (!isPasswordValid)
     throw new CustomError.UnauthenticatedError("User doesn't Exists");
 
-  const tokenPayload = {
-    name: emailAlreadyExists.name,
-    userId: emailAlreadyExists._id,
-    role: emailAlreadyExists.role,
-  };
+  const tokenPayload = createTokenUser(user);
 
   attachCookiesToResponse({ res, tokenPayload });
 };

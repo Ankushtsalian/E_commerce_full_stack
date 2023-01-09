@@ -1,7 +1,11 @@
 const User = require("../Modals/User-Schema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
-const { createTokenUser, attachCookiesToResponse } = require("../utils");
+const {
+  createTokenUser,
+  attachCookiesToResponse,
+  checkPermissions,
+} = require("../utils");
 /**-----------------------------------------------getAllUsers------------------------------------------------ */
 const getAllUsers = async (req, res) => {
   const users = await User.find({ role: "user" }).select("-password");
@@ -20,6 +24,7 @@ const getSingleUser = async (req, res) => {
     throw new CustomError.NotFoundError(
       `No User with id : ${req.params.userId}`
     );
+  checkPermissions(req.user, user._id);
 
   res.status(StatusCodes.OK).json({ user });
 };

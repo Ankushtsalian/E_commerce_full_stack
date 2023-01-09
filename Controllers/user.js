@@ -25,7 +25,24 @@ const showCurrentUser = async (req, res) => {
 };
 
 const updateUserPassword = async (req, res) => {
-  res.send(req.body);
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword)
+    throw new CustomError.BadRequestError("Please Provide both Passwords");
+
+  const user = await User.findOne({ _id: req.user.userId });
+
+  const isPasswordValid = await user.comparePassword(oldPassword);
+
+  if (!isPasswordValid)
+    throw new CustomError.UnauthenticatedError("Invalid Credentials");
+
+  user.password = newPassword;
+
+  //Alternate TO FindOneAndUpdate to save changes in mongoDb doc
+  await user.save();
+
+  res.status(StatusCodes.OK).json({ user, msg: "Success! Password Updated" });
 };
 
 const updateUser = async (req, res) => {

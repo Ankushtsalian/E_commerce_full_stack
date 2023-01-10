@@ -3,7 +3,10 @@ const CustomError = require("../errors");
 const Product = require("../Models/Product-schema");
 
 const createProduct = async (req, res) => {
-  res.json({ mesg: req.signedCookies });
+  req.body.user = req.user.userId;
+  const products = await Product.create(req.body);
+
+  res.status(StatusCodes.CREATED).json({ products });
 };
 const getAllProducts = async (req, res) => {
   res.json({ mesg: req.signedCookies });

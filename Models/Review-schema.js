@@ -31,7 +31,7 @@ const reviewSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-// ReviewSchema.index({ product: 1, user: 1 }, { unique: true });
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
 // ReviewSchema.statics.calculateAverageRating = async function (productId) {
 //   const result = await this.aggregate([

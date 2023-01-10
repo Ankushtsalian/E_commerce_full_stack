@@ -23,7 +23,7 @@ const getAllProducts = async (req, res) => {
 /**-----------------------getSingleProduct-------------------------------- */
 
 const getSingleProduct = async (req, res) => {
-  const { id: productId } = req.params;
+  const { productId } = req.params;
 
   const product = await Product.findOne({ _id: productId });
 
@@ -38,7 +38,7 @@ const getSingleProduct = async (req, res) => {
 /**------------------------updateProduct------------------------------- */
 
 const updateProduct = async (req, res) => {
-  const { id: productId } = req.params;
+  const { productId } = req.params;
 
   const product = await Product.findOneAndUpdate({ _id: productId }, req.body, {
     new: true,
@@ -56,7 +56,7 @@ const updateProduct = async (req, res) => {
 /**--------------------------deleteProduct----------------------------- */
 
 const deleteProduct = async (req, res) => {
-  const { id: productId } = req.params;
+  const { productId } = req.params;
 
   const product = await Product.findOne({ _id: productId });
 

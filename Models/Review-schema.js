@@ -23,11 +23,11 @@ const reviewSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // product: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: "Product",
-    //   required: true,
-    // },
+    product: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Product",
+      required: true,
+    },
   },
   { timestamps: true }
 );

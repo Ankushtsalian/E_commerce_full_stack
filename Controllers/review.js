@@ -5,6 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { checkPermissions } = require("../utils");
 
+/**--------------------------------------------createReview---------------------------------------------------- */
 const createReview = async (req, res) => {
   const { product: productId } = req.body;
   const isValidProduct = await Product.findOne({ _id: productId });
@@ -28,12 +29,19 @@ const createReview = async (req, res) => {
 
   res.status(StatusCodes.CREATED).json({ review });
 };
+/**------------------------------------------------------------------------------------------------ */
+
+/**------------------------------------------getAllReviews------------------------------------------------------ */
 
 const getAllReviews = async (req, res) => {
   const reviews = await Review.find({});
 
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
+/**------------------------------------------------------------------------------------------------ */
+
+/**------------------------------------------getSingleReview------------------------------------------------------ */
+
 const getSingleReview = async (req, res) => {
   const { id: reviewId } = req.params;
 
@@ -45,9 +53,17 @@ const getSingleReview = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ review });
 };
+/**------------------------------------------------------------------------------------------------ */
+
+/**------------------------------------------------------------------------------------------------ */
+
 const updateReview = async (req, res) => {
   res.send("updateReview");
 };
+/**------------------------------------------------------------------------------------------------ */
+
+/**------------------------------------------------------------------------------------------------ */
+
 const deleteReview = async (req, res) => {
   res.send("deleteReview");
 };

@@ -6,8 +6,7 @@ const CustomError = require("../errors");
 const { checkPermissions } = require("../utils");
 
 const createReview = async (req, res) => {
-  const { productId } = req.body;
-
+  const { product: productId } = req.body;
   const isValidProduct = await Product.findOne({ _id: productId });
 
   if (!isValidProduct) {

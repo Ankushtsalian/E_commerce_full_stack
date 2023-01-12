@@ -25,6 +25,7 @@ const createReview = async (req, res) => {
     );
   }
   req.body.user = req.user.userId;
+  req.body.userName = req.user.name;
   const review = await Review.create(req.body);
 
   res.status(StatusCodes.CREATED).json({ review });
@@ -34,7 +35,17 @@ const createReview = async (req, res) => {
 /**------------------------------------------getAllReviews------------------------------------------------------ */
 
 const getAllReviews = async (req, res) => {
-  const reviews = await Review.find({});
+  //referencing "Product" schema in review schema as "product" get name company and price of that product
+  //you will get nested obj in dB
+  const reviews = await Review.find({})
+    .populate({
+      path: "product",
+      select: "name company price",
+    })
+    .populate({
+      path: "user",
+      select: "name",
+    });
 
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
@@ -45,7 +56,15 @@ const getAllReviews = async (req, res) => {
 const getSingleReview = async (req, res) => {
   const { id: reviewId } = req.params;
 
-  const review = await Review.findOne({ _id: reviewId });
+  const review = await Review.findOne({ _id: reviewId })
+    .populate({
+      path: "product",
+      select: "name company price",
+    })
+    .populate({
+      path: "user",
+      select: "name",
+    });
 
   if (!review) {
     throw new CustomError.NotFoundError(`No review with id ${reviewId}`);
@@ -58,14 +77,42 @@ const getSingleReview = async (req, res) => {
 /**------------------------------------------------------------------------------------------------ */
 
 const updateReview = async (req, res) => {
-  res.send("updateReview");
+  const { id: reviewId } = req.params;
+  const { rating, title, comment } = req.body;
+
+  const review = await Review.findOne({ _id: reviewId });
+
+  if (!review) {
+    throw new CustomError.NotFoundError(`No review with id ${reviewId}`);
+  }
+
+  checkPermissions(req.user, review.user);
+
+  review.rating = rating;
+  review.title = title;
+  review.comment = comment;
+
+  await review.save();
+  res.status(StatusCodes.OK).json({ review });
 };
 /**------------------------------------------------------------------------------------------------ */
 
 /**------------------------------------------------------------------------------------------------ */
 
 const deleteReview = async (req, res) => {
-  res.send("deleteReview");
+  const { id: reviewId } = req.params;
+
+  const review = await Review.findOne({ _id: reviewId });
+
+  if (!review) {
+    throw new CustomError.NotFoundError(`No review with id ${reviewId}`);
+  }
+  //authentication.js  for req.user used for role || review.user is user id
+  checkPermissions(req.user, review.user);
+
+  await review.remove();
+
+  res.status(StatusCodes.OK).json({ msg: "Success! Review removed" });
 };
 
 const getSingleProductReviews = async (req, res) => {

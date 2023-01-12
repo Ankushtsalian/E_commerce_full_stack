@@ -28,6 +28,11 @@ const reviewSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
+    userName: {
+      type: "String",
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );

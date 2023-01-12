@@ -15,7 +15,8 @@ const createProduct = async (req, res) => {
 /**----------------------getAllProducts--------------------------------- */
 
 const getAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  //refer review controller here reviews obj not in doc of dB in prod schema but used virtuals in prod schema
+  const products = await Product.find({}).populate("reviews");
 
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };

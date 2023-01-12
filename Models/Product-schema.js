@@ -63,7 +63,18 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  //needed for virtual setup in next line for review access
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+//virtual connection btw  localField: "_id" AND foreignField: "product"
+// this will connect and adds all review matches rating 5
+productSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "product",
+  justOne: false,
+  match: { rating: 5 },
+});
 
 module.exports = mongoose.model("Product", productSchema);

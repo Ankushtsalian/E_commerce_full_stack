@@ -74,7 +74,7 @@ const getSingleReview = async (req, res) => {
 };
 /**------------------------------------------------------------------------------------------------ */
 
-/**------------------------------------------------------------------------------------------------ */
+/**------------------------------------------------updateReview------------------------------------------------ */
 
 const updateReview = async (req, res) => {
   const { id: reviewId } = req.params;
@@ -97,7 +97,7 @@ const updateReview = async (req, res) => {
 };
 /**------------------------------------------------------------------------------------------------ */
 
-/**------------------------------------------------------------------------------------------------ */
+/**---------------------------------------------deleteReview--------------------------------------------------- */
 
 const deleteReview = async (req, res) => {
   const { id: reviewId } = req.params;
@@ -114,6 +114,9 @@ const deleteReview = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: "Success! Review removed" });
 };
+/**------------------------------------------------------------------------------------------------ */
+
+/**---------------------------------------------getSingleProductReviews--------------------------------------------------- */
 
 const getSingleProductReviews = async (req, res) => {
   const { productId } = req.params;
@@ -121,6 +124,7 @@ const getSingleProductReviews = async (req, res) => {
   const reviews = await Review.find({ product: productId });
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
+/**------------------------------------------------------------------------------------------------ */
 
 module.exports = {
   createReview,

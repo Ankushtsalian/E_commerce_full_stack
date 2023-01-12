@@ -77,4 +77,12 @@ productSchema.virtual("reviews", {
   // match: { rating: 5 },
 });
 
+//Basically when you remove product remove hook is triggered
+//but all your reviewa associated to product aren't removed from db
+//so this pre func get triggered when product removed
+//deletes all review associated with this product
+productSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({ product: this._id });
+});
+
 module.exports = mongoose.model("Product", productSchema);

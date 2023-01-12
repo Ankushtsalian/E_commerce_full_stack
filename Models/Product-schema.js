@@ -63,7 +63,26 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  //needed for virtual setup in next line for review access
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+//virtual connection btw  localField: "_id" AND foreignField: "product"
+// this will connect and adds all review matches rating 5
+productSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "product",
+  justOne: false,
+  // match: { rating: 5 },
+});
+
+//Basically when you remove product remove hook is triggered
+//but all your reviewa associated to product aren't removed from db
+//so this pre func get triggered when product removed
+//deletes all review associated with this product
+productSchema.pre("remove", async function (next) {
+  await this.model("Review").deleteMany({ product: this._id });
+});
 
 module.exports = mongoose.model("Product", productSchema);

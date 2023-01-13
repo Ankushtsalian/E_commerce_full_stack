@@ -67,6 +67,7 @@ reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 reviewSchema.statics.calculateAverageRating = async function (productId) {
   //obtained from mongodB Atlas
   //find match with current product
+  //group by specific rating and get average rating of that prod
   const result = await this.aggregate([
     {
       $match: {

@@ -63,8 +63,27 @@ reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 //   }
 // };
 
+//similar to function but created using product schema
 reviewSchema.statics.calculateAverageRating = async function (productId) {
-  console.log(productId);
+  const result = await this.aggregate([
+    {
+      $match: {
+        product: productId,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        averageRating: {
+          $avg: "$rating",
+        },
+        numOfReviews: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+  console.log(result);
 };
 
 reviewSchema.post("save", async function () {

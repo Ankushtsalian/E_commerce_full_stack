@@ -63,12 +63,16 @@ reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 //   }
 // };
 
-// ReviewSchema.post('save', async function () {
-//   await this.constructor.calculateAverageRating(this.product);
-// });
+reviewSchema.statics.calculateAverageRating = async function (productId) {
+  console.log(productId);
+};
 
-// ReviewSchema.post('remove', async function () {
-//   await this.constructor.calculateAverageRating(this.product);
-// });
+reviewSchema.post("save", async function () {
+  await this.constructor.calculateAverageRating(this.product);
+});
+
+reviewSchema.post("remove", async function () {
+  await this.constructor.calculateAverageRating(this.product);
+});
 
 module.exports = mongoose.model("Review", reviewSchema);

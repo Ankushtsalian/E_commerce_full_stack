@@ -1,4 +1,4 @@
-const User = require("../Modals/User-Schema");
+const User = require("../Models/User-Schema");
 const { StatusCodes } = require("http-status-codes");
 const CustomError = require("../errors");
 const { attachCookiesToResponse, createTokenUser } = require("../utils");

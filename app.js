@@ -2,13 +2,24 @@ require("./db/connect");
 require("dotenv").config();
 require("express-async-errors");
 const cors = require("cors");
-
+const path = require("path");
 // Express
 const express = require("express");
 const app = express();
+
+//Serve React app
+app.use(express.static(path.join(__dirname, ".", "client", "build")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, ".", "client", "build"));
+});
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin:
+      process.env.NODE_ENV !== "production"
+        ? "http://localhost:3000"
+        : "https://e-commerce-node-qttl.onrender.com",
     credentials: true,
   })
 );
@@ -47,16 +58,19 @@ app.use(xss());
 app.use(mongoSanitize());
 
 // Middleware
-app.use(morgan("tiny"));
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("tiny"));
+}
+
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use(express.static("./public"));
 app.use(fileupload());
 
-app.get("/", (req, res) => {
-  res.send("hello world   test");
-});
+// app.get("/", (req, res) => {
+//   res.send("hello world   test");
+// });
 app.get("/api/v1", (req, res) => {
   res.status("200").json({ cookie: req.signedCookies });
 });

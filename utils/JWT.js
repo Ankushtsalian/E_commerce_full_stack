@@ -24,7 +24,6 @@ const attachCookiesToResponse = ({ res, tokenPayload }) => {
     expires: new Date(Date.now() + oneDay),
     secure: process.env.NODE_ENV === "production",
     signed: true,
-    sameSite: "None",
   });
 
   res.status(StatusCodes.OK).json({ tokenTest: token });

@@ -13,11 +13,46 @@ function App() {
   const [cookie, setCookie] = useState(null);
   const [state, setState] = useState("");
 
+  const authFetch = axios.create({
+    baseURL: "/",
+  });
+
+  /**------------------------AXIOS INTERCEPTORS------------------------*/
+
+  authFetch.interceptors.request.use(
+    (config) => {
+      config.headers["Authorization"] = `Bearer ${state}`;
+      return config;
+    },
+    (error) => {
+      console.log("REQUEST ERROR");
+      fetchLogout();
+      return Promise.reject(error);
+    }
+  );
+  // response interceptor
+  authFetch.interceptors.response.use(
+    (response) => {
+      console.log("AUTH RESPONSE");
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      if (error.response.status === 401) {
+        console.log("RESPONSE ERROR");
+        fetchLogout();
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  /**------------------------AXIOS INTERCEPTORS------------------------*/
+
   const login = async () => {
     const url = `/api/v1/auth/login`;
 
     try {
-      const res = await axios.post(
+      const res = await authFetch.post(
         url,
         {
           email,
@@ -75,6 +110,19 @@ function App() {
       console.log(error);
     }
   };
+  const getSingleUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const url = `/api/v1/users/63bad9ce883fe7b91f9bbd6b`;
+
+      const res = await authFetch.get(url);
+      console.log(res.data);
+    } catch (error) {
+      console.log(`SINGLE USER  ERROR ${error}`);
+      // console.log(error);
+    }
+  };
 
   useEffect(() => {
     const cookieValue = getCookie("token");
@@ -100,7 +148,7 @@ function App() {
     // Cookies.remove("token");
 
     try {
-      const res = await axios.get(url, {
+      const res = await authFetch.get(url, {
         withCredentials: true,
       });
       console.log(res.data);
@@ -150,7 +198,7 @@ function App() {
           />
         </div>
         <button type="submit" className="btn btn-block submit-btn">
-          Testing
+          SubmitTest
         </button>
       </form>
       <div className="container">
@@ -165,6 +213,9 @@ function App() {
         </button>
         <button className="btn testing-btn" onClick={login}>
           login
+        </button>
+        <button className="btn testing-btn" onClick={getSingleUser}>
+          User
         </button>
       </div>
     </>

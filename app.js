@@ -6,15 +6,7 @@ const cors = require("cors");
 // Express
 const express = require("express");
 const app = express();
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV !== "production"
-        ? "http://localhost:3000"
-        : "https://e-commerce-node-qttl.onrender.com",
-    credentials: true,
-  })
-);
+app.use(cors());
 
 //rest of the packages
 const morgan = require("morgan");
